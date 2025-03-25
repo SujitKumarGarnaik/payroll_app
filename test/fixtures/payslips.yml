@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  employee: one
+  month: MyString
+  salary: 9.99
+  generated_at: 2025-03-15 19:11:35
+
+two:
+  employee: two
+  month: MyString
+  salary: 9.99
+  generated_at: 2025-03-15 19:11:35

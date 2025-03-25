@@ -1,0 +1,42 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="text-center mb-3">
+        <%= link_to 'Dayspring', root_path, class: "navbar-brand fs-3 px-3 py-2", style: "background-color: #1e2a3a; color: #f4f7fa; border-radius: 6px; text-decoration: none;" %>
+      </div>
+      <div class="card shadow-lg" style="background-color: #2c3e50; color: #f4f7fa;">
+        <div class="card-body">
+          <h2 class="text-center mb-4">Log In</h2>
+
+          <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "needs-validation" }) do |f| %>
+            
+            <div class="mb-3">
+              <%= f.label :email, class: "form-label" %>
+              <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control", style: "background-color: #1e2a3a; color: #f4f7fa; border: 1px solid #5a89a9;" %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :password, class: "form-label" %>
+              <%= f.password_field :password, autocomplete: "current-password", class: "form-control", style: "background-color: #1e2a3a; color: #f4f7fa; border: 1px solid #5a89a9;" %>
+            </div>
+
+            <% if devise_mapping.rememberable? %>
+              <div class="form-check mb-3">
+                <%= f.check_box :remember_me, class: "form-check-input" %>
+                <%= f.label :remember_me, class: "form-check-label" %>
+              </div>
+            <% end %>
+
+            <div class="d-grid">
+              <%= f.submit "Log In", class: "btn btn-lg", style: "background-color: #5a89a9; color: #1e2a3a; border: none;" %>
+            </div>
+          <% end %>
+
+          <div class="text-center mt-3">
+            <%= render "devise/shared/links" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
