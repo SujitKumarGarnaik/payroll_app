@@ -22,7 +22,7 @@
 set :output, "log/cron.log"  
 set :environment, "development" 
 
-every :month, at: 'end of the month at 11:00pm' do
+every :month, at: 'end of the month at 11:59pm' do
     runner "GeneratePayslipsJob.perform_later"
   end
   

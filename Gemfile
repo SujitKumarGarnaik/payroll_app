@@ -67,3 +67,4 @@ gem 'prawn'
 gem 'actionmailer'
 gem 'whenever', require: false
 gem 'sidekiq'
+gem 'redis'
