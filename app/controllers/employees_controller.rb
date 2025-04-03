@@ -77,20 +77,22 @@ class EmployeesController < ApplicationController
   end
 
   def send_payslip
-    @employee = Employee.find(params[:id])
-    @payslip = @employee.payslips.order(created_at: :desc).first 
-
-    if @payslip&.pdf.attached?
-      payslip_pdf_path = ActiveStorage::Blob.service.path_for(@payslip.pdf.key) 
-
-      PayslipMailer.send_payslip(@employee, payslip_pdf_path).deliver_now
-      flash[:notice] = "Payslip sent successfully to #{@employee.email}."
+    employee = Employee.find(params[:id])
+    payslips = employee.payslips.order(created_at: :desc)
+  
+    if payslips.any?
+      pdf_generator = PayslipPdf.new(employee, payslips)
+      pdf_path = pdf_generator.generate_pdf
+  
+      PayslipMailer.send_payslip(employee, pdf_path).deliver_now
+      flash[:notice] = "Payslip sent successfully to #{employee.email}."
     else
-      flash[:alert] = "Payslip not found!"
+      flash[:alert] = "No payslip available for this employee."
     end
-    
+  
     redirect_to admin_dashboard_path
   end
+  
   
 
   def generate_payslip
@@ -117,7 +119,7 @@ class EmployeesController < ApplicationController
   end  
 
 
-  
+
   def download_payslip
     pdf = PayslipPdfGenerator.new(@employee).generate
     send_data pdf, filename: "payslip_#{@employee.id}.pdf", type: 'application/pdf', disposition: 'attachment'

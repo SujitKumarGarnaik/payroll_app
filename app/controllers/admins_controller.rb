@@ -2,11 +2,7 @@ class AdminsController < ApplicationController
   before_action :authenticate_user!
 
   def dashboard
-    if current_user.admin?
-      @employees = Employee.all  
-    else
-      redirect_to root_path, alert: "You are not authorized to view this page."
-    end
+    @employees = Employee.all  
   end
 
   def new
@@ -14,14 +10,19 @@ class AdminsController < ApplicationController
   end
 
   def send_payslip
-    employee = Employee.find(params[:id])  
-    pdf_path = generate_payslip_pdf(employee) 
-
+    employee = Employee.find(params[:id])
+    payslips = employee.payslips 
+  
+    pdf_generator = PayslipPdf.new(employee, payslips)
+    pdf_path = pdf_generator.generate_pdf
+  
     PayslipMailer.send_payslip(employee, pdf_path).deliver_now
-
+  
     flash[:notice] = "Payslip sent to #{employee.email}"
     redirect_to admin_dashboard_path
   end
+  
+
 
   private
 
@@ -31,13 +32,5 @@ class AdminsController < ApplicationController
     end
   end
 
-  def generate_payslip_pdf(employee)
-    pdf = Prawn::Document.new
-    pdf.text "Payslip for #{employee.name}", size: 20, style: :bold
-    pdf.text "Salary: $#{employee.salary}", size: 15
-    pdf_path = Rails.root.join("tmp", "payslip_#{employee.id}.pdf")
-    pdf.render_file(pdf_path) 
-    pdf_path.to_s
-  end
   
 end

@@ -11,11 +11,16 @@ class PayslipsController < ApplicationController
   
     def download
       payslip = Payslip.find(params[:id])
+    
       if current_user.admin? || payslip.employee.user == current_user
-        send_file PayslipPdfGenerator.generate(payslip), type: 'application/pdf', disposition: 'inline'
+        pdf_generator = PayslipPdf.new(payslip.employee, [payslip]) 
+        pdf_path = pdf_generator.generate_pdf  
+    
+        send_file pdf_path, type: 'application/pdf', disposition: 'inline'
       else
         redirect_to payslips_path, alert: "You are not authorized to view this payslip."
       end
     end
+    
   end
   
